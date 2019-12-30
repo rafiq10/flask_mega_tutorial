@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block app_content %}
+  <table class="table table-hover">
+    <tr>
+      <td width="256px"><img src="{{ user.avatar(256) }}"></td>
+      <td>
+        <h1>{{ _('User') }}: {{ user.fullName }}</h1>
+        <p><b>{{ _('Country') }}:</b> {{ user.get_country() }}</p>
+        <p><b>{{ _('Department') }}:</b> {{ user.get_department() }}</p>
+        {% if not user.get_last_seen() == "1900-01-01" %}<p><b>{{ _('Last Login') }}:</b> {{ moment(user.get_last_seen()).format('LLL') }}</p>{% endif %}
+
+        <p>{{ _('%(count)d followers', count=user.get_am_followed_by_without_me()|length ) }}, {{ _('%(count)d following', count = user.get_am_following_without_me()|length) }}</p>
+
+
+        {% if not user.get_about_me() == "" %}<p><b>{{ _('About Me') }}:</b> {{ user.get_about_me() }}</p>{% endif %}
+        {% if user.TIF == current_user.TIF %}
+          <p><a href="{{ url_for('edit_profile') }}">{{ _('Edit your profile') }}</a></p>
+        {% elif not current_user.is_following(user.TIF) %}
+          <p><a href="{{ url_for('follow', username = user.TIF) }}">{{ _('Follow') }}</a></p>
+        {% else %}
+          <p><a href="{{ url_for('unfollow', username = user.TIF) }}">{{ _('Unfollow') }}</a></p>
+        {% endif %}
+      </td>
+    </tr>
+  </table>
+  <hr>
+  {% for post in posts %}
+    {% include '_post.html' %}
+  {% endfor %}
+
+  {% include '_pager.html' %}
+  {% endblock %}

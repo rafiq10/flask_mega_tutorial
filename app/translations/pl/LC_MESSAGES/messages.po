@@ -1,0 +1,192 @@
+# Polish translations for PROJECT.
+# Copyright (C) 2019 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2019.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2019-10-29 12:33+0100\n"
+"PO-Revision-Date: 2019-10-29 12:27+0100\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: pl\n"
+"Language-Team: pl <LL@li.org>\n"
+"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && "
+"(n%100<10 || n%100>=20) ? 1 : 2)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.7.0\n"
+
+#: app/__init__.py:30
+msgid "Please log in to access this page."
+msgstr "Zaloguj sie, aby moc nawigowac po stronie"
+
+#: app/forms.py:7 app/forms.py:13
+msgid "Username"
+msgstr "Uzytkownik"
+
+#: app/forms.py:8 app/forms.py:15
+msgid "Password"
+msgstr "Haslo"
+
+#: app/forms.py:9
+msgid "Remember Me"
+msgstr "Zapamietaj mnie"
+
+#: app/forms.py:10 app/templates/login.html:5
+msgid "Sign In"
+msgstr "Zaloguj sie"
+
+#: app/forms.py:14
+msgid "About me"
+msgstr "O mnie"
+
+#: app/forms.py:16 app/forms.py:21
+msgid "Submit"
+msgstr "OK"
+
+#: app/forms.py:19
+msgid "Say something"
+msgstr "Powiedz cos"
+
+#: app/routes.py:21
+msgid "Your post is now live!"
+msgstr "Twoj post zostal zamieszczony!"
+
+#: app/routes.py:46
+msgid "Invalid username or password"
+msgstr "Nieprawidlowa nazwa uzytkownika lub haslo"
+
+#: app/routes.py:111 app/routes.py:125
+#, python-format
+msgid "User %(username)s not found."
+msgstr "Uzytkownik %(username)s nie istnieje"
+
+#: app/routes.py:114
+msgid "You cannot follow yourself!"
+msgstr "Nie mozesz obserwowac siebie!"
+
+#: app/routes.py:117
+#, python-format
+msgid "You are following %(username)s!"
+msgstr "Obserwujesz %(username)s!"
+
+#: app/routes.py:128
+msgid "You cannot unfollow yourself!"
+msgstr "Nie mozesz od-obserwowac siebie!"
+
+#: app/routes.py:131
+#, python-format
+msgid "You are not following %(TF)s"
+msgstr "Przestales obserwowac %(TF)s"
+
+#: app/templates/404.html:4
+msgid "File Not Found"
+msgstr "Strona nie odnaleziona"
+
+#: app/templates/404.html:5 app/templates/505.html:6
+msgid "Back"
+msgstr "Wstecz"
+
+#: app/templates/505.html:4
+msgid "An unexpected error has occured"
+msgstr "Wystapil nieoczekiwany problem"
+
+#: app/templates/505.html:5
+msgid "The administrator has been notified. Sorry for the inconvenience!"
+msgstr "Administrator systemu zostal poinformowany. Przepraszamy za niedogodnosci"
+
+#: app/templates/_pager.html:5
+msgid "Newer posts"
+msgstr "Nowe posty"
+
+#: app/templates/_pager.html:10
+msgid "Older posts"
+msgstr "Starsze posty"
+
+#: app/templates/_post.html:14
+#, python-format
+msgid "%(username)s siad %(when)s:"
+msgstr "%(username)s napisal %(when)s"
+
+#: app/templates/base.html:4
+msgid "Welcome to Microblog"
+msgstr "Witaj na moim blogu"
+
+#: app/templates/base.html:12
+msgid "Toggle navigation"
+msgstr ""
+
+#: app/templates/base.html:21
+msgid "Home"
+msgstr "Strona Glowna"
+
+#: app/templates/base.html:22
+msgid "Explore"
+msgstr "Przeszukuj"
+
+#: app/templates/base.html:33
+msgid "Profile"
+msgstr "Profil"
+
+#: app/templates/base.html:34
+msgid "Logout"
+msgstr "Wyloguj sie"
+
+#: app/templates/base.html:36
+msgid "Login"
+msgstr "Zaloguj sie"
+
+#: app/templates/edit_profile.html:5
+msgid "Edit Profile"
+msgstr "Edytuj Profil"
+
+#: app/templates/index.html:5
+#, python-format
+msgid "Hi, %(username)s!"
+msgstr "Czesc, %(username)s!"
+
+#: app/templates/user.html:8
+msgid "User"
+msgstr "Uzytkownik"
+
+#: app/templates/user.html:9
+msgid "Country"
+msgstr "Kraj"
+
+#: app/templates/user.html:10
+msgid "Department"
+msgstr "Departament"
+
+#: app/templates/user.html:11
+msgid "Last Login"
+msgstr "Ostatnio zalogowany"
+
+#: app/templates/user.html:13
+#, python-format
+msgid "%(count)d followers"
+msgstr "%(count)d sledzanych"
+
+#: app/templates/user.html:13
+#, python-format
+msgid "%(count)d following"
+msgstr "%(count)d sledzacych"
+
+#: app/templates/user.html:16
+msgid "About Me"
+msgstr "O mnie"
+
+#: app/templates/user.html:18
+msgid "Edit your profile"
+msgstr "Edytuj Twoj Profil"
+
+#: app/templates/user.html:20
+msgid "Follow"
+msgstr "Sledz"
+
+#: app/templates/user.html:22
+msgid "Unfollow"
+msgstr "Przestan sledzic"
+

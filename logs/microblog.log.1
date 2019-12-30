@@ -1,0 +1,92 @@
+2019-10-21 11:37:42,968 ERROR: Exception on /user/TF05079 [GET] [in c:\cygwin64\home\tf05079\microblog\venv\lib\site-packages\flask\app.py:1891]
+Traceback (most recent call last):
+  File "c:\cygwin64\home\tf05079\microblog\venv\lib\site-packages\flask\app.py", line 2446, in wsgi_app
+    response = self.full_dispatch_request()
+  File "c:\cygwin64\home\tf05079\microblog\venv\lib\site-packages\flask\app.py", line 1951, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "c:\cygwin64\home\tf05079\microblog\venv\lib\site-packages\flask\app.py", line 1820, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "c:\cygwin64\home\tf05079\microblog\venv\lib\site-packages\flask\_compat.py", line 39, in reraise
+    raise value
+  File "c:\cygwin64\home\tf05079\microblog\venv\lib\site-packages\flask\app.py", line 1949, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "c:\cygwin64\home\tf05079\microblog\venv\lib\site-packages\flask\app.py", line 1935, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "c:\cygwin64\home\tf05079\microblog\venv\lib\site-packages\flask_login\utils.py", line 261, in decorated_view
+    return func(*args, **kwargs)
+  File "C:\cygwin64\home\tf05079\microblog\app\routes.py", line 65, in user
+    return render_template('user.html', user=my_user, posts=my_posts)
+  File "c:\cygwin64\home\tf05079\microblog\venv\lib\site-packages\flask\templating.py", line 138, in render_template
+    ctx.app.jinja_env.get_or_select_template(template_name_or_list),
+  File "c:\cygwin64\home\tf05079\microblog\venv\lib\site-packages\jinja2\environment.py", line 869, in get_or_select_template
+    return self.get_template(template_name_or_list, parent, globals)
+  File "c:\cygwin64\home\tf05079\microblog\venv\lib\site-packages\jinja2\environment.py", line 830, in get_template
+    return self._load_template(name, self.make_globals(globals))
+  File "c:\cygwin64\home\tf05079\microblog\venv\lib\site-packages\jinja2\environment.py", line 804, in _load_template
+    template = self.loader.load(self, name, globals)
+  File "c:\cygwin64\home\tf05079\microblog\venv\lib\site-packages\jinja2\loaders.py", line 125, in load
+    code = environment.compile(source, name, filename)
+  File "c:\cygwin64\home\tf05079\microblog\venv\lib\site-packages\jinja2\environment.py", line 591, in compile
+    self.handle_exception(exc_info, source_hint=source_hint)
+  File "c:\cygwin64\home\tf05079\microblog\venv\lib\site-packages\jinja2\environment.py", line 780, in handle_exception
+    reraise(exc_type, exc_value, tb)
+  File "c:\cygwin64\home\tf05079\microblog\venv\lib\site-packages\jinja2\_compat.py", line 37, in reraise
+    raise value.with_traceback(tb)
+  File "C:\cygwin64\home\tf05079\microblog\app\templates\user.html", line 13, in template
+    <p>{{ len(user.get_am_followed_by_without_me()) }} followers, {{len(user.get_am_following_without_me()) following}}</p>
+  File "c:\cygwin64\home\tf05079\microblog\venv\lib\site-packages\jinja2\environment.py", line 497, in _parse
+    return Parser(self, source, name, encode_filename(filename)).parse()
+  File "c:\cygwin64\home\tf05079\microblog\venv\lib\site-packages\jinja2\parser.py", line 901, in parse
+    result = nodes.Template(self.subparse(), lineno=1)
+  File "c:\cygwin64\home\tf05079\microblog\venv\lib\site-packages\jinja2\parser.py", line 883, in subparse
+    rv = self.parse_statement()
+  File "c:\cygwin64\home\tf05079\microblog\venv\lib\site-packages\jinja2\parser.py", line 130, in parse_statement
+    return getattr(self, 'parse_' + self.stream.current.value)()
+  File "c:\cygwin64\home\tf05079\microblog\venv\lib\site-packages\jinja2\parser.py", line 268, in parse_block
+    node.body = self.parse_statements(('name:endblock',), drop_needle=True)
+  File "c:\cygwin64\home\tf05079\microblog\venv\lib\site-packages\jinja2\parser.py", line 165, in parse_statements
+    result = self.subparse(end_tokens)
+  File "c:\cygwin64\home\tf05079\microblog\venv\lib\site-packages\jinja2\parser.py", line 876, in subparse
+    self.stream.expect('variable_end')
+  File "c:\cygwin64\home\tf05079\microblog\venv\lib\site-packages\jinja2\lexer.py", line 384, in expect
+    self.name, self.filename)
+jinja2.exceptions.TemplateSyntaxError: expected token 'end of print statement', got 'following'
+2019-10-21 11:38:31,588 INFO: Microblog startup [in C:\cygwin64\home\tf05079\microblog\app\__init__.py:56]
+2019-10-21 11:38:35,759 ERROR: Exception on /user/TF05079 [GET] [in c:\cygwin64\home\tf05079\microblog\venv\lib\site-packages\flask\app.py:1891]
+Traceback (most recent call last):
+  File "c:\cygwin64\home\tf05079\microblog\venv\lib\site-packages\flask\app.py", line 2446, in wsgi_app
+    response = self.full_dispatch_request()
+  File "c:\cygwin64\home\tf05079\microblog\venv\lib\site-packages\flask\app.py", line 1951, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "c:\cygwin64\home\tf05079\microblog\venv\lib\site-packages\flask\app.py", line 1820, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "c:\cygwin64\home\tf05079\microblog\venv\lib\site-packages\flask\_compat.py", line 39, in reraise
+    raise value
+  File "c:\cygwin64\home\tf05079\microblog\venv\lib\site-packages\flask\app.py", line 1949, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "c:\cygwin64\home\tf05079\microblog\venv\lib\site-packages\flask\app.py", line 1935, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "c:\cygwin64\home\tf05079\microblog\venv\lib\site-packages\flask_login\utils.py", line 261, in decorated_view
+    return func(*args, **kwargs)
+  File "C:\cygwin64\home\tf05079\microblog\app\routes.py", line 65, in user
+    return render_template('user.html', user=my_user, posts=my_posts)
+  File "c:\cygwin64\home\tf05079\microblog\venv\lib\site-packages\flask\templating.py", line 140, in render_template
+    ctx.app,
+  File "c:\cygwin64\home\tf05079\microblog\venv\lib\site-packages\flask\templating.py", line 120, in _render
+    rv = template.render(context)
+  File "c:\cygwin64\home\tf05079\microblog\venv\lib\site-packages\jinja2\asyncsupport.py", line 76, in render
+    return original_render(self, *args, **kwargs)
+  File "c:\cygwin64\home\tf05079\microblog\venv\lib\site-packages\jinja2\environment.py", line 1008, in render
+    return self.environment.handle_exception(exc_info, True)
+  File "c:\cygwin64\home\tf05079\microblog\venv\lib\site-packages\jinja2\environment.py", line 780, in handle_exception
+    reraise(exc_type, exc_value, tb)
+  File "c:\cygwin64\home\tf05079\microblog\venv\lib\site-packages\jinja2\_compat.py", line 37, in reraise
+    raise value.with_traceback(tb)
+  File "C:\cygwin64\home\tf05079\microblog\app\templates\user.html", line 1, in top-level template code
+    {% extends "base.html" %}
+  File "C:\cygwin64\home\tf05079\microblog\app\templates\base.html", line 30, in top-level template code
+    {% block content %}{% endblock %}
+  File "C:\cygwin64\home\tf05079\microblog\app\templates\user.html", line 13, in block "content"
+    <p>{{ len(user.get_am_followed_by_without_me()) }} followers, {{len(user.get_am_following_without_me())}} following</p>
+jinja2.exceptions.UndefinedError: 'len' is undefined
+2019-10-21 11:39:28,798 INFO: Microblog startup [in C:\cygwin64\home\tf05079\microblog\app\__init__.py:56]

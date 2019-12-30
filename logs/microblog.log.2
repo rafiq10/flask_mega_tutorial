@@ -1,0 +1,82 @@
+2019-10-21 11:23:01,997 ERROR: Exception on /user/TF05079 [GET] [in c:\cygwin64\home\tf05079\microblog\venv\lib\site-packages\flask\app.py:1891]
+Traceback (most recent call last):
+  File "c:\cygwin64\home\tf05079\microblog\venv\lib\site-packages\flask\app.py", line 2446, in wsgi_app
+    response = self.full_dispatch_request()
+  File "c:\cygwin64\home\tf05079\microblog\venv\lib\site-packages\flask\app.py", line 1951, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "c:\cygwin64\home\tf05079\microblog\venv\lib\site-packages\flask\app.py", line 1820, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "c:\cygwin64\home\tf05079\microblog\venv\lib\site-packages\flask\_compat.py", line 39, in reraise
+    raise value
+  File "c:\cygwin64\home\tf05079\microblog\venv\lib\site-packages\flask\app.py", line 1949, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "c:\cygwin64\home\tf05079\microblog\venv\lib\site-packages\flask\app.py", line 1935, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "c:\cygwin64\home\tf05079\microblog\venv\lib\site-packages\flask_login\utils.py", line 261, in decorated_view
+    return func(*args, **kwargs)
+  File "C:\cygwin64\home\tf05079\microblog\app\routes.py", line 68, in user
+    return render_template('user.html', user=my_user, posts=posts)
+  File "c:\cygwin64\home\tf05079\microblog\venv\lib\site-packages\flask\templating.py", line 140, in render_template
+    ctx.app,
+  File "c:\cygwin64\home\tf05079\microblog\venv\lib\site-packages\flask\templating.py", line 120, in _render
+    rv = template.render(context)
+  File "c:\cygwin64\home\tf05079\microblog\venv\lib\site-packages\jinja2\asyncsupport.py", line 76, in render
+    return original_render(self, *args, **kwargs)
+  File "c:\cygwin64\home\tf05079\microblog\venv\lib\site-packages\jinja2\environment.py", line 1008, in render
+    return self.environment.handle_exception(exc_info, True)
+  File "c:\cygwin64\home\tf05079\microblog\venv\lib\site-packages\jinja2\environment.py", line 780, in handle_exception
+    reraise(exc_type, exc_value, tb)
+  File "c:\cygwin64\home\tf05079\microblog\venv\lib\site-packages\jinja2\_compat.py", line 37, in reraise
+    raise value.with_traceback(tb)
+  File "C:\cygwin64\home\tf05079\microblog\app\templates\user.html", line 1, in top-level template code
+    {% extends "base.html" %}
+  File "C:\cygwin64\home\tf05079\microblog\app\templates\base.html", line 30, in top-level template code
+    {% block content %}{% endblock %}
+  File "C:\cygwin64\home\tf05079\microblog\app\templates\user.html", line 21, in block "content"
+    {% include '_post.html' %}
+  File "C:\cygwin64\home\tf05079\microblog\app\templates\_post.html", line 3, in top-level template code
+    <td><img src="{{ post.author.avatar(36) }}"></td>
+jinja2.exceptions.UndefinedError: 'str object' has no attribute 'avatar'
+2019-10-21 11:25:11,254 INFO: Microblog startup [in C:\cygwin64\home\tf05079\microblog\app\__init__.py:56]
+2019-10-21 11:25:15,827 ERROR: Exception on /user/TF05079 [GET] [in c:\cygwin64\home\tf05079\microblog\venv\lib\site-packages\flask\app.py:1891]
+Traceback (most recent call last):
+  File "c:\cygwin64\home\tf05079\microblog\venv\lib\site-packages\flask\app.py", line 2446, in wsgi_app
+    response = self.full_dispatch_request()
+  File "c:\cygwin64\home\tf05079\microblog\venv\lib\site-packages\flask\app.py", line 1951, in full_dispatch_request
+    rv = self.handle_user_exception(e)
+  File "c:\cygwin64\home\tf05079\microblog\venv\lib\site-packages\flask\app.py", line 1820, in handle_user_exception
+    reraise(exc_type, exc_value, tb)
+  File "c:\cygwin64\home\tf05079\microblog\venv\lib\site-packages\flask\_compat.py", line 39, in reraise
+    raise value
+  File "c:\cygwin64\home\tf05079\microblog\venv\lib\site-packages\flask\app.py", line 1949, in full_dispatch_request
+    rv = self.dispatch_request()
+  File "c:\cygwin64\home\tf05079\microblog\venv\lib\site-packages\flask\app.py", line 1935, in dispatch_request
+    return self.view_functions[rule.endpoint](**req.view_args)
+  File "c:\cygwin64\home\tf05079\microblog\venv\lib\site-packages\flask_login\utils.py", line 261, in decorated_view
+    return func(*args, **kwargs)
+  File "C:\cygwin64\home\tf05079\microblog\app\routes.py", line 71, in user
+    return render_template('user.html', user=my_user, posts=my_posts)
+  File "c:\cygwin64\home\tf05079\microblog\venv\lib\site-packages\flask\templating.py", line 140, in render_template
+    ctx.app,
+  File "c:\cygwin64\home\tf05079\microblog\venv\lib\site-packages\flask\templating.py", line 120, in _render
+    rv = template.render(context)
+  File "c:\cygwin64\home\tf05079\microblog\venv\lib\site-packages\jinja2\asyncsupport.py", line 76, in render
+    return original_render(self, *args, **kwargs)
+  File "c:\cygwin64\home\tf05079\microblog\venv\lib\site-packages\jinja2\environment.py", line 1008, in render
+    return self.environment.handle_exception(exc_info, True)
+  File "c:\cygwin64\home\tf05079\microblog\venv\lib\site-packages\jinja2\environment.py", line 780, in handle_exception
+    reraise(exc_type, exc_value, tb)
+  File "c:\cygwin64\home\tf05079\microblog\venv\lib\site-packages\jinja2\_compat.py", line 37, in reraise
+    raise value.with_traceback(tb)
+  File "C:\cygwin64\home\tf05079\microblog\app\templates\user.html", line 1, in top-level template code
+    {% extends "base.html" %}
+  File "C:\cygwin64\home\tf05079\microblog\app\templates\base.html", line 30, in top-level template code
+    {% block content %}{% endblock %}
+  File "C:\cygwin64\home\tf05079\microblog\app\templates\user.html", line 21, in block "content"
+    {% include '_post.html' %}
+  File "C:\cygwin64\home\tf05079\microblog\app\templates\_post.html", line 3, in top-level template code
+    <td><img src="{{ post.author.avatar(36) }}"></td>
+jinja2.exceptions.UndefinedError: 'str object' has no attribute 'avatar'
+2019-10-21 11:26:24,018 INFO: Microblog startup [in C:\cygwin64\home\tf05079\microblog\app\__init__.py:56]
+2019-10-21 11:27:28,580 INFO: Microblog startup [in C:\cygwin64\home\tf05079\microblog\app\__init__.py:56]
+2019-10-21 11:37:36,284 INFO: Microblog startup [in C:\cygwin64\home\tf05079\microblog\app\__init__.py:56]
