@@ -14,6 +14,7 @@ class Pagination():
     self.current_page = request.args.get('page', 1, type=int)
     self.my_pages = []
     self.paginate()
+    self.num_pages=0
 
   def get_page(self, num_page):
     logging.warning('num_page: ' + str(num_page))
@@ -40,8 +41,8 @@ class Pagination():
     return (self.current_page>1)
 
   def paginate(self):
-    num_pages = ceil(len(self.elems) / self.posts_per_page)+1
-    for num_page in range(1, num_pages):
+    self.num_pages = ceil(len(self.elems) / self.posts_per_page)+1
+    for num_page in range(1, self.num_pages):
       page_elems=[]
       my_x = ((num_page)*self.posts_per_page,len(self.elems))
       last_elem = min(my_x)

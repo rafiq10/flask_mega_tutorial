@@ -1,11 +1,20 @@
 import logging 
 from datetime import datetime, timedelta
 import unittest
-from app import app, db
+from app import create_app, db
 from app.models import User
+from config import Config
+
+class TestConfig(Config):
+  TESTING=True
+  SQLALCHEMY_DATABASE_URI = 'sqlite://'
 
 class UserModelCase(unittest.TestCase):
   def setUp(self):
+    self.app = create_app(config_class=TestConfig)
+    self.app_context = self.app.context()
+    self.app_context.push()
+
     self.add_fake_user(TF="TF99998", country="ESP",department="TisGF",activeUntil="1900-01-01",certPwd="TF99998",fullName="Arek Malysz")
     self.add_fake_user(TF="TF99999", country="ESP",department="TisGF",activeUntil="1900-01-01",certPwd="TF99999", fullName="Robert Korzeniowski")
     self.add_fake_user(TF="TF99997", country="ESP",department="TisGF",activeUntil="1900-01-01",certPwd="TF99997", fullName="Robert Lewandowski")
@@ -18,6 +27,7 @@ class UserModelCase(unittest.TestCase):
     self.delete_fake_user(TF="TF99991", country="ESP")
     self.delete_fake_user(TF="TF99997", country="ESP")
     self.delete_fake_user(TF="TF99996", country="ESP")
+    self.app_context.pop()
 
   def test_password_hashing(self):
     u = User(my_tif="TF99999")

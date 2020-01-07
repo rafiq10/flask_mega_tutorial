@@ -1,13 +1,39 @@
 import logging
 import datetime
+import app
+from flask import url_for
 from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy import String, Date, Boolean
 from hashlib import md5
 from app.db import get_json_by_sql, save_to_db
+from app.pagination import Pagination
 from config import Config
 from app import login
 
-class User():
+
+class PaginateAPIMixin(object):
+  @staticmethod
+  def to_collection_dict(items, page, per_page, endpoint, **kwargs):
+    p = Pagination(items)
+    resources = p.get_page(page)
+    
+    data = {
+      'items': [item.to_dict() for item in resources.items],
+      '_meta': {
+        'page': page,
+        'per_page': per_page,
+        'total_pages': p.num_pages,
+        'total_items': items.count
+      },
+      '_links': {
+        'self': url_for(endpoint=endpoint, page=page, per_page=per_page, **kwargs),
+        'next': url_for(endpoint=endpoint, page=page+1, per_page=per_page, **kwargs),
+        'prev': url_for(endpoint=endpoint, page=page-1, per_page=per_page, **kwargs)
+      }
+    }
+    return data
+
+class User(PaginateAPIMixin):
 
   def __init__(self, my_tif):
     my_sql = "select TIF, country, department,fullName,activeUntil, cast(DECRYPTBYASYMKEY(ASYMKEY_ID('ClaveAsym'), certPwd,N'" + Config.DB_DECRYPT_PWD + "') as varchar(max)) as pwd, last_seen, about_me from tblUsers where TIF='" + my_tif + "'"
@@ -219,6 +245,26 @@ class User():
                                       'post_date': datetime.datetime.strptime(str(r[3])[:str(r[3]).find(".")],'%Y-%m-%d %H:%M:%S')
                                     })
       self.my_followed_postDates.append(str(r[3])[:str(r[3]).find(".")])
+  
+  def to_dict(self):
+    data={
+      # 'id': self.TIF,
+      'TF': self.TIF,
+      'full name': self.fullName,
+      'last_seen': self.last_seen,
+      'about_me': self.about_me,
+      'follower_count': len(self.am_following),
+      'followed_count': len(self.am_followed_by),
+      'followed_by': self.followed,
+      'following': self.following
+    }
+    logging.warn('to_dict data:' + str(data))
+    return data
+
+  def from_dict(self, data, new_user=False):
+    for field in ['username', 'about_me']:
+      if field in data:
+        setattr(self, field, data[field])
     
 class Post():
   """ kwarg(1) = 'author', kwarg(2) = 'body """
@@ -231,6 +277,7 @@ class Post():
       self.author = User(my_tif=self.my_resp[0][1])
       self.body = self.my_resp[0][2]
       self.post_date = datetime.datetime.strptime(self.my_resp[0][3], '%Y-%m-%d %H:%M:%S') 
+      self.lang = app.get_locale()
 
     elif (self.is_key_in_keys('author', kwargs) and self.is_key_in_keys('body', kwargs)) :
       the_time = datetime.datetime.utcnow() + datetime.timedelta(hours=2)
@@ -238,7 +285,10 @@ class Post():
       self.author = kwargs['author']
       self.body = kwargs['body']
       self.post_date = the_time
-      save_to_db("insert into RRHH_blogPosts (TF, postText, postDate) values('" + self.author.TIF + "','" + self.body + "','" + the_time_str + "')")
+      self.lang = app.get_locale()
+      logging.warn('self.lang' + self.lang)
+      
+      save_to_db("insert into RRHH_blogPosts (TF, postText, postDate, postLanguage) values('" + self.author.TIF + "','" + self.body + "','" + the_time_str + "','" + self.lang + "')")
     else:
       pass
 
@@ -262,3 +312,37 @@ def get_all_posts():
   for r in my_resp:
     all_posts.append({'author': User(r.TF), 'body': r.postText, 'post_date': datetime.datetime.strptime(r.postDate[:str(r.postDate).find(".")], '%Y-%m-%d %H:%M:%S') })
   return all_posts
+
+
+    
+
+def get_all_users():
+  my_sql = "select * from tblUsers order by TIF desc"
+  my_resp = get_json_by_sql(my_sql)
+  all_users = []
+  for r in my_resp:
+    all_users.append({'TIF': r.TIF, 'country': r.country, 'department': r.department, 'last_seen': r.last_seen, 'about_me': r.about_me })
+  return all_users
+
+def create_user(data):
+  
+  TIF = data['TIF']
+  country= data['country']
+  department = data['department']
+  fullName = data['full_name']
+  certPwd = data['pwd']
+  about_me = data['about_me']
+
+  if certPwd is None:
+    certPwd = TIF
+  if about_me is None:
+    about_me = ""
+  if department is None:
+    department = ""
+
+  logging.warn('TIF: ' + str(TIF),'country: ' + str(country))
+  my_sql = "insert into tblUsers (country, TIF, department, fullName, certPwd, about_me, last_seen) values ('" + \
+           country + "','" + TIF + "', '" + department + "','" + fullName + "', ENCRYPTBYASYMKEY(ASYMKEY_ID('ClaveAsym'), '" + certPwd + "'), '" + about_me + "', '1900-01-01')"
+  
+  logging.warn('my_sql in create_user ' + my_sql)
+  save_to_db(my_sql)

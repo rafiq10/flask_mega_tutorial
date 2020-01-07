@@ -6,3 +6,7 @@ MAIL_PORT=587
 MAIL_USE_TLS=1
 MAIL_USERNAME=rafiq10@gmail.com
 MAIL_PASSWORD="KA9ka8o7"
+
+DB_PASSWORD = "Rfl2206"
+DATABASE_URL = "mssql+pymssql://Rafal:Rfl2206@datacluster/TIS_FinanzasGlobal"
+DB_DECRYPT_PWD = "0RAN1ger5@"
