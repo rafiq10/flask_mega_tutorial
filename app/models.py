@@ -258,7 +258,6 @@ class User(PaginateAPIMixin):
       'followed_by': self.followed,
       'following': self.following
     }
-    logging.warn('to_dict data:' + str(data))
     return data
 
   def from_dict(self, data, new_user=False):
@@ -286,7 +285,6 @@ class Post():
       self.body = kwargs['body']
       self.post_date = the_time
       self.lang = app.get_locale()
-      logging.warn('self.lang' + self.lang)
       
       save_to_db("insert into RRHH_blogPosts (TF, postText, postDate, postLanguage) values('" + self.author.TIF + "','" + self.body + "','" + the_time_str + "','" + self.lang + "')")
     else:
@@ -333,16 +331,23 @@ def create_user(data):
   certPwd = data['pwd']
   about_me = data['about_me']
 
-  if certPwd is None:
-    certPwd = TIF
-  if about_me is None:
-    about_me = ""
-  if department is None:
-    department = ""
-
-  logging.warn('TIF: ' + str(TIF),'country: ' + str(country))
   my_sql = "insert into tblUsers (country, TIF, department, fullName, certPwd, about_me, last_seen) values ('" + \
            country + "','" + TIF + "', '" + department + "','" + fullName + "', ENCRYPTBYASYMKEY(ASYMKEY_ID('ClaveAsym'), '" + certPwd + "'), '" + about_me + "', '1900-01-01')"
   
-  logging.warn('my_sql in create_user ' + my_sql)
+  save_to_db(my_sql)
+
+def update_user(data, TF):
+  fields = ""
+  for k in data:
+    if not data[k] == "":
+      if k == 'certPwd':
+        fields = fields + str(k) + " = ENCRYPTBYASYMKEY(ASYMKEY_ID('ClaveAsym'), '" + str(data[k]) + "'),"
+      else:
+        fields = fields + str(k) + " = '" + str(data[k]) + "',"
+
+  fields = fields[:len(fields)-1]
+  
+
+  my_sql = "update tblUsers set " + fields + " where TIF = '" + TF + "'"
+  logging.warn(my_sql)
   save_to_db(my_sql)
