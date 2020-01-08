@@ -1,31 +1,37 @@
-from flask import jsonify, request, url_for
+from flask import jsonify, request, url_for, g, abort
 from app import logging
 from app.api import bp
 from app.models import User, PaginateAPIMixin, get_all_users, create_user as cu, update_user as uu
 from app.api.errors import bad_request
+from app.api.auth import token_auth
 
 @bp.route('/users/<id>',methods=['GET'])
+@token_auth.login_required
 def get_user(id):
   return jsonify(User(id).to_dict())
 
 @bp.route('/users',methods=['GET'])
+@token_auth.login_required
 def get_users():
   data = jsonify(get_all_users())
   return data
 
 @bp.route('/users/<id>/following', methods=['GET'])
+@token_auth.login_required
 def get_followers(id):
   my_user = User(id)
   data = jsonify(my_user.get_am_followed_by_without_me())
   return data
 
 @bp.route('/users/<id>/followed', methods=['GET'])
+@token_auth.login_required
 def get_followed(id):
   my_user = User(id)
   data = jsonify(my_user.get_am_following_without_me())
   return data
 
 @bp.route('/users',methods=['POST'])
+@token_auth.login_required
 def create_user():
   
   TIF = request.form.get('TIF')
@@ -53,7 +59,10 @@ def create_user():
   return response
 
 @bp.route('/users/<id>',methods=['PUT'])
+@token_auth.login_required
 def update_users(id):
+  if g.current_user.TIF != id:
+    abort(403)
   u = User(str(id))
   logging.warn('u.TF: ' + u.TIF)
   if u.TIF == "":

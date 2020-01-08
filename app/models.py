@@ -1,5 +1,8 @@
 import logging
-import datetime
+from datetime import datetime, timedelta
+
+import base64
+import os
 import app
 from flask import url_for
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -36,7 +39,7 @@ class PaginateAPIMixin(object):
 class User(PaginateAPIMixin):
 
   def __init__(self, my_tif):
-    my_sql = "select TIF, country, department,fullName,activeUntil, cast(DECRYPTBYASYMKEY(ASYMKEY_ID('ClaveAsym'), certPwd,N'" + Config.DB_DECRYPT_PWD + "') as varchar(max)) as pwd, last_seen, about_me from tblUsers where TIF='" + my_tif + "'"
+    my_sql = "select TIF, country, department,fullName,activeUntil, cast(DECRYPTBYASYMKEY(ASYMKEY_ID('ClaveAsym'), certPwd,N'" + Config.DB_DECRYPT_PWD + "') as varchar(max)) as pwd, last_seen, about_me , token, token_expiration from tblUsers where TIF='" + my_tif + "'"
     self.my_resp = get_json_by_sql(my_sql)
     self.following = get_json_by_sql("select followedTF from RRHH_followers where followerTF = '" + str(my_tif) + "'")
     self.followed = get_json_by_sql("select followerTF from RRHH_followers where followedTF = '" + str(my_tif) + "'")
@@ -53,6 +56,8 @@ class User(PaginateAPIMixin):
       self.about_me = ""
       self.is_actived = False
       self.is_anonym = False
+      self.token = ""
+      self.token_expiration = "1900-01-01"
     else:
       self.TIF = self.my_resp[0][0]
       self.country = self.my_resp[0][1]
@@ -62,6 +67,8 @@ class User(PaginateAPIMixin):
 
       self.last_seen = self.my_resp[0][6]
       self.about_me = self.my_resp[0][7]
+      self.token = self.my_resp[0][8]
+      self.token_expiration = self.my_resp[0][9]
 
       if self.my_resp[0][5]:
         self.certPwd = generate_password_hash(self.my_resp[0][5])
@@ -119,19 +126,51 @@ class User(PaginateAPIMixin):
       return self.department
 
   def get_last_seen(self):
-    return datetime.datetime.strptime(self.last_seen, '%Y-%m-%d %H:%M:%S') 
+    return datetime.strptime(self.last_seen, '%Y-%m-%d %H:%M:%S') 
+
+  def get_token_expiration(self):
+    return datetime.strptime(self.token_expiration, '%Y-%m-%d %H:%M:%S') 
 
   def get_about_me(self):
     return self.about_me
 
+  def get_token(self, expires_in=3600):
+    now = datetime.utcnow() + timedelta(hours=1)
+    logging.warn('token_expiration: ' + str(self.token_expiration))
+    logging.warn('now + timedelta: ' + str(now + timedelta(seconds=60)))
+    if self.token and datetime.strptime(self.token_expiration, '%Y-%m-%d %H:%M:%S') > now + timedelta(seconds=60):
+       return self.token
+    self.token = base64.b64encode(os.urandom(24)).decode('utf-8')
+    self.token_expiration = now + timedelta(seconds=expires_in)
+    save_to_db("update tblUsers set token = '" + self.token + "' where TIF = '" + self.TIF + "'" )
+    self.save_token_expiration_to_db()
+    
+    return self.token
+
+  def revoke_token(self):
+    now = datetime.utcnow() + timedelta(hours=1)
+    self.token_expiration = now - timedelta(seconds=1)
+    self.save_token_expiration_to_db()
+
+  def save_token_expiration_to_db(self):
+    save_to_db("update tblUsers set token_expiration = '" + str(self.token_expiration)[:str(self.token_expiration).find(".")]  + "' where TIF = '" + self.TIF + "'" )
+
+  @staticmethod
+  def check_token(token):
+    tf = get_json_by_sql("select TIF from tblUsers where token = '" + token + "'")
+    user = User(tf[0].TIF)
+    if user is None or datetime.strptime(user.token_expiration, '%Y-%m-%d %H:%M:%S') < datetime.utcnow():
+      return None
+    return user
+
   def set_last_login(self):
-    the_time = datetime.datetime.utcnow() + datetime.timedelta(hours=2)
+    the_time = datetime.utcnow() + timedelta(hours=2)
     the_time_str = str(the_time)[:str(the_time).find(".")]
     save_to_db("update tblUsers set last_seen = '" + the_time_str + "' where TIF = '" + self.TIF + "'" )
     save_to_db("insert into tblWebStats (TF,login_time, url_visit_time, url_visited) values('" + self.TIF + "','" + the_time_str + "', '" + the_time_str + "', '" + Config.ENV_BASE_URL + "login')")
 
   def save_visit(self, my_url):
-    the_time = datetime.datetime.utcnow() + datetime.timedelta(hours=2)
+    the_time = datetime.utcnow() + timedelta(hours=2)
     the_time_str = str(the_time)[:str(the_time).find(".")]
     save_to_db("insert into tblWebStats (TF, url_visit_time, url_visited) values('" + self.TIF + "','" + the_time_str + "', '" + my_url + "')")
 
@@ -174,7 +213,6 @@ class User(PaginateAPIMixin):
         new_list.append(i)
     return new_list
 
-
   def follow(self, user):
     userTF = user.TIF
     if not self.is_following(userTF):
@@ -198,7 +236,7 @@ class User(PaginateAPIMixin):
       my_posts.append({
         'author': User(self.my_followed_postsUsers[i]), 
         'body': self.my_followed_posts[i]['body'], 
-        'post_date': datetime.datetime.strptime(self.my_followed_postDates[i], '%Y-%m-%d %H:%M:%S') 
+        'post_date': datetime.strptime(self.my_followed_postDates[i], '%Y-%m-%d %H:%M:%S') 
       })
     return my_posts
 
@@ -242,7 +280,7 @@ class User(PaginateAPIMixin):
                                         'avatar': self.avatar
                                         }, 
                                       'body': str(r[2]),
-                                      'post_date': datetime.datetime.strptime(str(r[3])[:str(r[3]).find(".")],'%Y-%m-%d %H:%M:%S')
+                                      'post_date': datetime.strptime(str(r[3])[:str(r[3]).find(".")],'%Y-%m-%d %H:%M:%S')
                                     })
       self.my_followed_postDates.append(str(r[3])[:str(r[3]).find(".")])
   
@@ -264,6 +302,7 @@ class User(PaginateAPIMixin):
     for field in ['username', 'about_me']:
       if field in data:
         setattr(self, field, data[field])
+
     
 class Post():
   """ kwarg(1) = 'author', kwarg(2) = 'body """
@@ -275,11 +314,11 @@ class Post():
       self.post_id = self.my_resp[0][0]
       self.author = User(my_tif=self.my_resp[0][1])
       self.body = self.my_resp[0][2]
-      self.post_date = datetime.datetime.strptime(self.my_resp[0][3], '%Y-%m-%d %H:%M:%S') 
+      self.post_date = datetime.strptime(self.my_resp[0][3], '%Y-%m-%d %H:%M:%S') 
       self.lang = app.get_locale()
 
     elif (self.is_key_in_keys('author', kwargs) and self.is_key_in_keys('body', kwargs)) :
-      the_time = datetime.datetime.utcnow() + datetime.timedelta(hours=2)
+      the_time = datetime.utcnow() + timedelta(hours=2)
       the_time_str = str(the_time)[:str(the_time).find(".")]
       self.author = kwargs['author']
       self.body = kwargs['body']
@@ -308,7 +347,7 @@ def get_all_posts():
   my_resp = get_json_by_sql(my_sql)
   all_posts = []
   for r in my_resp:
-    all_posts.append({'author': User(r.TF), 'body': r.postText, 'post_date': datetime.datetime.strptime(r.postDate[:str(r.postDate).find(".")], '%Y-%m-%d %H:%M:%S') })
+    all_posts.append({'author': User(r.TF), 'body': r.postText, 'post_date': datetime.strptime(r.postDate[:str(r.postDate).find(".")], '%Y-%m-%d %H:%M:%S') })
   return all_posts
 
 

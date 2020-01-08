@@ -78,3 +78,4 @@ jinja2.exceptions.UndefinedError: 'len' is undefined
 2019-10-22 17:38:26,282 INFO: Microblog startup [in c:\cygwin64\home\tf05079\microblog\app\__init__.py:56]
 2019-12-30 17:13:20,632 INFO: Microblog startup [in c:\cygwin64\home\tf05079\microblog\app\__init__.py:70]
 2020-01-02 14:53:51,041 INFO: Microblog startup [in C:\cygwin64\home\tf05079\microblog\app\__init__.py:84]
+2020-01-08 12:27:47,324 INFO: Microblog startup [in c:\cygwin64\home\tf05079\microblog\app\__init__.py:87]
